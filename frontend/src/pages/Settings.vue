@@ -52,15 +52,15 @@
                         <font-awesome-icon icon="globe" class="mr-3"/> Statping-ng
                     </a>
 
-                    <a href="https://github.com/handelsblattgroup/statping/wiki" class="mb-2 font-2 text-decoration-none text-muted">
+                    <a href="https://github.com/statping-ng/statping-ng/wiki" class="mb-2 font-2 text-decoration-none text-muted">
                         <font-awesome-icon icon="question" class="mr-3"/> {{$t('docs')}}
                     </a>
 
-                    <a href="https://github.com/handelsblattgroup/statping/wiki/API" class="mb-2 font-2 text-decoration-none text-muted">
+                    <a href="https://github.com/statping-ng/statping-ng/wiki/API" class="mb-2 font-2 text-decoration-none text-muted">
                         <font-awesome-icon icon="laptop" class="mr-2"/> API {{$t('docs')}}
                     </a>
 
-                    <a href="https://raw.githubusercontent.com/statping-ng/statping-ng/stable/CHANGELOG.md" class="mb-2 font-2 text-decoration-none text-muted">
+                    <a href="https://raw.githubusercontent.com/handelsblattgroup/statping/blob/main/CHANGELOG.md" class="mb-2 font-2 text-decoration-none text-muted">
                         <font-awesome-icon icon="book" class="mr-3"/> {{$t('changelog')}}
                     </a>
 
