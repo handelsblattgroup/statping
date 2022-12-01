@@ -10,7 +10,7 @@ jobs:
     - name: Stale Issues
       uses: actions/stale@v3
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token: ${{ secrets.GH_TOKEN }}
         stale-issue-message: "This issue hasn't had any updates in a while. If this is still a problem, please create a new issue."
         stale-issue-label: "stale"
         days-before-stale: 45
