@@ -5,10 +5,10 @@ import (
 	"github.com/handelsblattgroup/statping/source"
 	"github.com/handelsblattgroup/statping/types/notifications"
 	"github.com/handelsblattgroup/statping/utils"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pkg/errors"
+	_ "gorm.io/driver/mysql"
+	_ "gorm.io/driver/postgres"
 
 	"github.com/handelsblattgroup/statping/types/checkins"
 	"github.com/handelsblattgroup/statping/types/core"

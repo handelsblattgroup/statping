@@ -15,8 +15,8 @@ import (
 	"github.com/handelsblattgroup/statping/types/services"
 	"github.com/handelsblattgroup/statping/types/users"
 	"github.com/handelsblattgroup/statping/utils"
-	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 	"time"
 )
 

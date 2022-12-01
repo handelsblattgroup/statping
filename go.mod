@@ -15,9 +15,7 @@ require (
 	github.com/go-ping/ping v1.1.0
 	github.com/gorilla/mux v1.7.4
 	github.com/hako/durafmt v0.0.0-20200605151348-3a43fc422dd9
-	github.com/jinzhu/gorm v1.9.16
-	github.com/mattn/go-sqlite3 v1.14.16
-	github.com/statping-ng/emails v1.0.3
+	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.14.0
 	github.com/sirupsen/logrus v1.6.0
@@ -31,6 +29,10 @@ require (
 	google.golang.org/grpc/examples v0.0.0-20221129183632-be202a26011e
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.4.0
+	gorm.io/driver/mysql v1.4.4
+	gorm.io/driver/postgres v1.4.5
+	gorm.io/driver/sqlite v1.4.3
+	gorm.io/gorm v1.24.2
 )
 
 require (
@@ -64,7 +66,7 @@ require (
 	github.com/go-errors/errors v1.0.2 // indirect
 	github.com/go-resty/resty/v2 v2.2.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	github.com/gofrs/uuid v3.2.0+incompatible // indirect
+	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
@@ -77,7 +79,17 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/iij/doapi v0.0.0-20190504054126-0bbf12d6d7df // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
+	github.com/jackc/pgconn v1.13.0 // indirect
+	github.com/jackc/pgio v1.0.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
+	github.com/jackc/pgtype v1.12.0 // indirect
+	github.com/jackc/pgx/v4 v4.17.2 // indirect
+	github.com/jinzhu/gorm v1.9.12 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.3.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kolo/xmlrpc v0.0.0-20200310150728-e0350524596b // indirect
@@ -85,7 +97,6 @@ require (
 	github.com/labbsr0x/bindman-dns-webhook v1.0.2 // indirect
 	github.com/labbsr0x/goh v1.0.1 // indirect
 	github.com/lextoumbourou/goodhosts v2.1.0+incompatible // indirect
-	github.com/lib/pq v1.10.3 // indirect
 	github.com/linode/linodego v0.14.0 // indirect
 	github.com/liquidweb/liquidweb-go v1.6.1 // indirect
 	github.com/magiconair/properties v1.8.1 // indirect

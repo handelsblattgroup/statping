@@ -3,18 +3,21 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"github.com/handelsblattgroup/statping/types/metrics"
-	"github.com/handelsblattgroup/statping/utils"
-	"github.com/jinzhu/gorm"
 	"strings"
 	"time"
 
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/handelsblattgroup/statping/types/metrics"
+	"github.com/handelsblattgroup/statping/utils"
+	"gorm.io/gorm"
+
 	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 )
 
 var database Database
+var _ gorm.DB = database
 
 // Database is an interface which DB implements
 type Database interface {
@@ -22,7 +25,7 @@ type Database interface {
 	DB() *sql.DB
 	New() Database
 	NewScope(value interface{}) *gorm.Scope
-	CommonDB() gorm.SQLCommon
+	CommonDB() gorm.
 	Callback() *gorm.Callback
 	SetLogger(l gorm.Logger)
 	LogMode(enable bool) Database
@@ -109,8 +112,19 @@ type Database interface {
 	ChunkSize() int
 }
 
+func dialectorFromString(dialect string) gorm.Dialector {
+	switch dialect {
+	case "mysql":
+		return mysql.Dialector{}
+	case "postgres":
+		return postgres.Dialector{}
+	default:
+		return sqlite.Dialector{}
+	}
+}
+
 func (it *Db) ChunkSize() int {
-	switch it.Database.Dialect().GetName() {
+	switch it.Database.Dialector.Name() {
 	case "mysql":
 		return 3000
 	case "postgres":
@@ -136,7 +150,7 @@ func (it *Db) GormDB() *gorm.DB {
 }
 
 func (it *Db) DbType() string {
-	return it.Database.Dialect().GetName()
+	return it.Database.Dialector.Name()
 }
 
 func Close(db Database) error {
@@ -188,7 +202,7 @@ func Openw(dialect string, args ...interface{}) (db Database, err error) {
 	if dialect == "sqlite" {
 		dialect = "sqlite3"
 	}
-	gormdb, err := gorm.Open(dialect, args...)
+	gormdb, err := gorm.Open(dialectorFromString(dialect), args...)
 	if err != nil {
 		return nil, err
 	}

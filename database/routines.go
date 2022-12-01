@@ -5,9 +5,9 @@ import (
 	"github.com/handelsblattgroup/statping/utils"
 	"time"
 
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/mattn/go-sqlite3"
+	_ "gorm.io/driver/mysql"
+	_ "gorm.io/driver/postgres"
 )
 
 var (

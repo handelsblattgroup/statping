@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/handelsblattgroup/statping/types"
 	"github.com/handelsblattgroup/statping/utils"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/mattn/go-sqlite3"
 	gormbulk "github.com/t-tiger/gorm-bulk-insert/v2"
+	_ "gorm.io/driver/mysql"
+	_ "gorm.io/driver/postgres"
 	"time"
 )
 
