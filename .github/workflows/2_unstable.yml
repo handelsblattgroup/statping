@@ -163,7 +163,7 @@ jobs:
         id: upload-assets
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           VERSION: ${{ env.VERSION }}
         with:
           tag_name: dev-v${{ env.VERSION }}
