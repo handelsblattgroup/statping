@@ -5,12 +5,15 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"math/rand"
 	"net"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/handelsblattgroup/statping/types/metrics"
 	"github.com/prometheus/client_golang/prometheus"
@@ -23,10 +26,16 @@ import (
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
+var (
+	min int = 1
+	max int = 100
+)
+
 // checkServices will start the checking go routine for each service
 func CheckServices() {
 	log.Infoln(fmt.Sprintf("Starting monitoring process for %v Services", len(allServices)))
 	for _, s := range allServices {
+		//log.Infoln(fmt.Sprintf("Starting monitoring process for %v Service", s.Name))
 		time.Sleep(50 * time.Millisecond)
 		go ServiceCheckQueue(s, true)
 	}
@@ -36,7 +45,10 @@ func CheckServices() {
 func ServiceCheckQueue(s *Service, record bool) {
 	s.Start()
 	s.Checkpoint = utils.Now()
-	s.SleepDuration = (time.Duration(s.Id) * 100) * time.Millisecond
+
+	rand.Seed(time.Now().UnixNano())
+	randomNumber := rand.Intn(max-min+1) + min
+	s.SleepDuration = (time.Duration(randomNumber) * 100) * time.Millisecond
 
 CheckLoop:
 	for {
@@ -368,14 +380,101 @@ func CheckHttp(s *Service, record bool) (*Service, error) {
 
 	metrics.Gauge("status_code", float64(res.StatusCode), s.Name)
 
-	if s.Expected.String != "" {
-		match, err := regexp.MatchString(s.Expected.String, string(content))
-		if err != nil {
-			log.Warnln(fmt.Sprintf("Service %v expected: %v to match %v", s.Name, string(content), s.Expected.String))
+	if s.ExpectedHeaders.String != "" && res.Header != nil {
+		expectedHeaderValues := strings.Split(s.ExpectedHeaders.String, ",")
+		for _, expectedValue := range expectedHeaderValues {
+			expectedParts := strings.Split(expectedValue, "=")
+
+			expectedHeader := expectedParts[0]
+			expectedValue := ".*"
+
+			if len(expectedParts) > 1 {
+				expectedValue = expectedParts[1]
+			}
+
+			var respHeader string
+			var respValues []string
+			found := false
+
+			for respHeader, respValues = range res.Header {
+				// log.Infoln(respHeader + "=" + respValues[0]) //DEBUG
+				if strings.ToLower(respHeader) == expectedHeader {
+					found = true
+					break
+				}
+			}
+
+			if !found {
+				if record {
+					RecordFailure(s, fmt.Sprintf("HTTP Response Header '%v' was not found", expectedHeader), "regex")
+				}
+				return s, err
+			}
+
+			valueMatch := false
+			negatedString := ""
+
+			for _, value := range respValues {
+				match, err := regexp.MatchString(expectedValue, string(value))
+				if err != nil {
+					log.Warnln(errors.Wrapf(err, "Service %v: expected header \"%s\" check expression \"%s\" could not be compiled", s.Name, expectedHeader, expectedValue))
+				}
+
+				if match {
+					valueMatch = true
+					break
+				}
+			}
+
+			if s.ExpectedHeadersNegated {
+				negatedString = "negated "
+				valueMatch = !valueMatch
+			}
+
+			if !valueMatch {
+				if record {
+					RecordFailure(s, fmt.Sprintf("HTTP Response Headers did not match %sexpression '%v'", negatedString, s.ExpectedHeaders), "regex")
+				}
+				return s, err
+			}
 		}
+	}
+
+	if s.Expected.String != "" {
+		negatedString := ""
+
+		//err = os.WriteFile("debug.txt", content, 0644) // DEBUG
+		//if err != nil {
+		//	log.Fatal(err)
+		//}
+
+		// replace hidden nbsp - otherwise regex fails
+		var cleanContent = strings.ReplaceAll(string(content), "\u00a0", " ")
+		// replace carriage return + newlines - since might differ in source and regex
+		cleanContent = strings.ReplaceAll(cleanContent, "\r\n", "\n")
+
+		// replace carriage return + newlines - since might differ in source and regex
+		var regexString = strings.ReplaceAll(s.Expected.String, "\r\n", "\n")
+
+		// If no regex flags set, use default
+		// Regex newline and whitespace in golang, via https://stackoverflow.com/questions/43706322/regex-newline-and-whitespace-in-golang
+		if !strings.HasPrefix(regexString, "(?") {
+			regexString = "(?s)" + regexString
+		}
+
+		match, err := regexp.MatchString(regexString, cleanContent)
+		if err != nil {
+			log.Warnln(errors.Wrapf(err, "Service %v: expected content check expression \"%s\" could not be compiled", s.Name, s.Expected.String))
+		}
+
+		if s.ExpectedNegated {
+			negatedString = "negated "
+			match = !match
+		}
+
 		if !match {
 			if record {
-				RecordFailure(s, fmt.Sprintf("HTTP Response Body did not match '%v'", s.Expected), "regex")
+				RecordFailure(s, fmt.Sprintf("HTTP Response Body did not match %sexpression '%v'", negatedString, s.Expected), "regex")
 			}
 			return s, err
 		}

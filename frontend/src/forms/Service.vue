@@ -126,10 +126,35 @@
             </div>
         </div>
         <div v-if="service.type.match(/^(http)$/)" class="form-group row">
-            <label class="col-sm-4 col-form-label">HTTP Headers</label>
+            <label class="col-sm-4 col-form-label">HTTP Request Headers</label>
             <div class="col-sm-8">
                 <input v-model="service.headers" class="form-control" autocapitalize="none" spellcheck="false" placeholder='Authorization=1010101,Content-Type=application/json'>
                 <small class="form-text text-muted">Comma delimited list of HTTP Headers (KEY=VALUE,KEY=VALUE)</small>
+            </div>
+        </div>
+        <div v-if="service.type.match(/^(http)$/)" class="form-group row">
+            <label class="col-12 col-md-4 col-form-label">{{ $t('negate_expected_headers') }}</label>
+            <div class="col-12 col-md-8 mt-1 mb-2 mb-md-0">
+                <span @click="service.negate_expected_headers = !!service.negate_expected_headers" class="switch float-left">
+                    <input v-model="service.negate_expected_headers" type="checkbox" name="negate_expected_headers-option" class="switch" id="switch-negate_expected_headers" v-bind:checked="service.negate_expected_headers">
+                    <label for="switch-negate_expected_headers">Negate all following header checks</label>
+                </span>
+            </div>
+        </div>
+        <div v-if="service.type.match(/^(http)$/)" class="form-group row">
+            <label class="col-sm-4 col-form-label">{{ $t('expected_headers') }} (Regex)</label>
+            <div class="col-sm-8">
+                <input v-model="service.expected_headers" class="form-control" autocapitalize="none" spellcheck="false" placeholder='Authorization=Bearer \w+'>
+                <small class="form-text text-muted">Comma delimited list of HTTP Headers (KEY,KEY=VALUE,KEY=VALUE), the value may be omitted (checks only if header is present), plain or a <a target="_blank" href="https://regex101.com/r/I5bbj9/1">Regex</a></small>
+            </div>
+        </div>
+        <div v-if="service.type.match(/^(http)$/)" class="form-group row">
+            <label class="col-12 col-md-4 col-form-label">{{ $t('negate_expected') }}</label>
+            <div class="col-12 col-md-8 mt-1 mb-2 mb-md-0">
+                <span @click="service.negate_expected = !!service.negate_expected" class="switch float-left">
+                    <input v-model="service.negate_expected" type="checkbox" name="negate_expected-option" class="switch" id="switch-negate_expected" v-bind:checked="service.negate_expected">
+                    <label for="switch-negate_expected">Negate the following response content check</label>
+                </span>
             </div>
         </div>
         <div v-if="service.type.match(/^(http)$/)" class="form-group row">
@@ -295,6 +320,7 @@
                   method: "GET",
                   post_data: "",
                   headers: "",
+                  expected_headers: "",
                   expected: "",
                   expected_status: 200,
                   port: 80,

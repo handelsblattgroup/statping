@@ -6,7 +6,7 @@ import "time"
 // a new Failure will be inserted into Db.
 type Failure struct {
 	Id        int64     `gorm:"primary_key;column:id" json:"id"`
-	Issue     string    `gorm:"column:issue" json:"issue"`
+	Issue     string    `gorm:"size:10000;column:issue" json:"issue"`
 	Method    string    `gorm:"column:method" json:"method,omitempty"`
 	MethodId  int64     `gorm:"column:method_id" json:"method_id,omitempty"`
 	ErrorCode int       `gorm:"column:error_code" json:"error_code"`

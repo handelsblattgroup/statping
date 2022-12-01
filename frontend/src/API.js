@@ -8,7 +8,7 @@ const tokenKey = "statping_auth";
 class Api {
   constructor() {
     this.version = "0.91.0";
-    this.commit = "b7ecf0c31b0c75c394061d2f6457a925e4440f1e";
+    this.commit = "bb7ce1100797c89122aac6e2e33e826653c15b7c";
   }
 
   async oauth() {
@@ -275,7 +275,7 @@ class Api {
   }
 
   async github_release() {
-    return fetch('https://api.github.com/repos/statping-ng/statping-ng/releases/latest').then(response => response.json())
+    return fetch('https://api.github.com/repos/handelsblattgroup/statping/releases/latest').then(response => response.json())
   }
 
   async allActions(...all) {

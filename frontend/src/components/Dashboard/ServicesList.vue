@@ -2,10 +2,15 @@
     <div>
         <div v-if="servicesList.length === 0">
             <div class="alert alert-dark d-block mt-3 mb-0">
-                You currently don't have any services!
+                Loading... / You currently don't have any services!
             </div>
         </div>
     <table v-else class="table">
+      <tr>
+        <td colspan="6" class="font-2">
+          Total: {{ servicesList.length }}
+        </td>
+      </tr>
         <thead>
         <tr>
             <th scope="col">{{$t('name')}}</th>
@@ -24,47 +29,43 @@
             <th scope="col"></th>
         </tr>
         </thead>
-        <draggable id="services_list" tag="tbody" v-model="servicesList" handle=".drag_icon">
-            <tr v-for="(service, index) in servicesList" :key="service.id">
-                <td>
-                    <span v-if="$store.state.admin" class="drag_icon d-none d-md-inline">
-                        <font-awesome-icon icon="bars" class="mr-3"/>
-                    </span> {{service.name}}
-                </td>
-              <td class="d-none d-md-table-cell">
-                    <span class="badge text-uppercase" :class="{'badge-success': service.online, 'badge-danger': !service.online}">
-                        {{service.online ? $t('online') : $t('offline')}}
-                    </span>
+          <tr v-for="(service, index) in servicesList" :key="service.id">
+              <td>
+                <span class="font-2">{{service.name}}</span>
               </td>
-                <td class="d-none d-md-table-cell">
-                    <span class="badge text-uppercase" :class="{'badge-primary': service.public, 'badge-secondary': !service.public}">
-                        {{service.public ? $t('public') : $t('private')}}
-                    </span>
-                </td>
-                <td class="d-none d-md-table-cell">
-                    <div v-if="service.group_id !== 0">
-                        <span class="badge badge-secondary">{{serviceGroup(service)}}</span>
-                    </div>
-                </td>
+            <td class="d-none d-md-table-cell">
+                  <span class="badge text-uppercase" :class="{'badge-success': service.online, 'badge-danger': !service.online}">
+                      {{service.online ? $t('online') : $t('offline')}}
+                  </span>
+            </td>
               <td class="d-none d-md-table-cell">
-                <ServiceSparkList :service="service" :timeframe="list_timeframe"/>
+                  <span class="badge text-uppercase" :class="{'badge-primary': service.public, 'badge-secondary': !service.public}">
+                      {{service.public ? $t('public') : $t('private')}}
+                  </span>
               </td>
-                <td class="text-right">
-                    <div class="btn-group">
-                        <button :disabled="loading" v-if="$store.state.admin" @click.prevent="goto({path: `/dashboard/edit_service/${service.id}`, params: {service: service} })" class="btn btn-sm btn-outline-secondary">
-                            <font-awesome-icon icon="edit" />
-                        </button>
-                        <button :disabled="loading" @click.prevent="goto({path: serviceLink(service), params: {service: service} })" class="btn btn-sm btn-outline-secondary">
-                            <font-awesome-icon icon="chart-area" />
-                        </button>
-                        <button :disabled="loading" v-if="$store.state.admin" @click.prevent="deleteService(service)" class="btn btn-sm btn-danger">
-                            <font-awesome-icon v-if="!loading" icon="times" />
-                            <font-awesome-icon v-if="loading" icon="circle-notch" spin/>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        </draggable>
+              <td class="d-none d-md-table-cell">
+                  <div v-if="service.group_id !== 0">
+                      <span class="badge badge-secondary text-wrap">{{serviceGroup(service)}}</span>
+                  </div>
+              </td>
+            <td class="d-none d-md-table-cell">
+              <ServiceSparkList v-if="!service.online" :service="service" :timeframe="list_timeframe"/>
+            </td>
+              <td class="text-right">
+                  <div class="btn-group">
+                      <button :disabled="loading" v-if="$store.state.admin" @click.prevent="goto({path: `/dashboard/edit_service/${service.id}`, params: {service: service} })" class="btn btn-sm btn-outline-secondary">
+                          <font-awesome-icon icon="edit" />
+                      </button>
+                      <button :disabled="loading" @click.prevent="goto({path: serviceLink(service), params: {service: service} })" class="btn btn-sm btn-outline-secondary">
+                          <font-awesome-icon icon="chart-area" />
+                      </button>
+                      <button :disabled="loading" v-if="$store.state.admin" @click.prevent="deleteService(service)" class="btn btn-sm btn-danger">
+                          <font-awesome-icon v-if="!loading" icon="times" />
+                          <font-awesome-icon v-if="loading" icon="circle-notch" spin/>
+                      </button>
+                  </div>
+              </td>
+          </tr>
     </table>
     </div>
 </template>
@@ -142,6 +143,11 @@ export default {
     computed: {
         servicesList: {
             get () {
+                if (location.hash === '#failed'){
+                  return this.$store.getters.servicesInOrder.filter((service) => {
+                    return !service.online;
+                  })  
+                }
                 return this.$store.getters.servicesInOrder
             },
             set (value) {

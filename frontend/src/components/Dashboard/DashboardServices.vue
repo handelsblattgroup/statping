@@ -6,6 +6,10 @@
                 <router-link v-if="$store.state.admin" to="/dashboard/create_service" class="btn btn-sm btn-success float-right">
                     <font-awesome-icon icon="plus"/>  {{$t('create')}}
                 </router-link>
+
+                <a @click.prevent="failedOnly()" href="#failed" class="font-2 underline text-secondary float-right mr-2">
+                  Failed only
+                </a>
             </div>
             <div class="card-body pt-0">
                 <ServicesList/>
@@ -107,6 +111,10 @@
           }
       },
       methods: {
+        failedOnly() {
+          location.hash = 'failed';
+          location.reload();
+        },
           editChange(v) {
               this.group = {}
               this.edit = v

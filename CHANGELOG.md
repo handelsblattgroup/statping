@@ -1,3 +1,10 @@
+# 0.91.0 (11-30-2022)
+- Added response header checks
+- Added response header check negation
+- Added response body check negation
+- Fixed failure issue column size being too small
+- Fixed sleep duration been to long with high id numbers
+
 # 0.90.80 (01-26-2022)
 - Fixed permissions on /app directory - Thanks twouters
 
