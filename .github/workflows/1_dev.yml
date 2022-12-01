@@ -42,10 +42,10 @@ jobs:
         env:
           VERSION: ${{ env.VERSION }}
           COMMIT: ${{ github.sha }}
-          MJML_APP: ${{ secrets.MJML_APP }}
-          MJML_PRIVATE: ${{ secrets.MJML_PRIVATE }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          #MJML_APP: ${{ secrets.MJML_APP }}
+          #MJML_PRIVATE: ${{ secrets.MJML_PRIVATE }}
+          #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: make clean generate compile
 
       - name: Upload Compiled Frontend (rice-box.go)
@@ -227,34 +227,34 @@ jobs:
           STATPING_DIR: ${{ github.workspace }}
           API_SECRET: demopassword123
           DISABLE_LOGS: false
-          ALLOW_REPORTS: true
+          ALLOW_REPORTS: false
           SAMPLE_DATA: true
-          COVERALLS: ${{ secrets.COVERALLS }}
-          DISCORD_URL: ${{ secrets.DISCORD_URL }}
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          EMAIL_OUTGOING: ${{ secrets.EMAIL_OUTGOING }}
-          EMAIL_SEND_TO: ${{ secrets.EMAIL_SEND_TO }}
-          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
-          MOBILE_ID: ${{ secrets.MOBILE_ID }}
-          MOBILE_NUMBER: ${{ secrets.MOBILE_NUMBER }}
-          PUSHOVER_TOKEN: ${{ secrets.PUSHOVER_TOKEN }}
-          PUSHOVER_API: ${{ secrets.PUSHOVER_API }}
-          SLACK_URL: https://hooks.slack.com/services/TTJ1B90DP/RENU20O9M/9uI823SUnYBuGcxYlpSimD6H
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHANNEL: ${{ secrets.TELEGRAM_CHANNEL }}
-          TWILIO_SID: ${{ secrets.TWILIO_SID }}
-          TWILIO_SECRET: ${{ secrets.TWILIO_SECRET }}
-          TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
-          TWILIO_TO: ${{ secrets.TWILIO_TO }}
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-          GOTIFY_URL: ${{ secrets.GOTIFY_URL }}
-          GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }}
-          SNS_TOKEN: ${{ secrets.SNS_TOKEN }}
-          SNS_SECRET: ${{ secrets.SNS_SECRET }}
-          SNS_REGION: ${{ secrets.SNS_REGION }}
-          SNS_TOPIC: ${{ secrets.SNS_TOPIC }}
+          #COVERALLS: ${{ secrets.COVERALLS }}
+          #DISCORD_URL: ${{ secrets.DISCORD_URL }}
+          #EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          #EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          #EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          #EMAIL_OUTGOING: ${{ secrets.EMAIL_OUTGOING }}
+          #EMAIL_SEND_TO: ${{ secrets.EMAIL_SEND_TO }}
+          #EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          #MOBILE_ID: ${{ secrets.MOBILE_ID }}
+          #MOBILE_NUMBER: ${{ secrets.MOBILE_NUMBER }}
+          #PUSHOVER_TOKEN: ${{ secrets.PUSHOVER_TOKEN }}
+          #PUSHOVER_API: ${{ secrets.PUSHOVER_API }}
+          #SLACK_URL: https://hooks.slack.com/services/TTJ1B90DP/RENU20O9M/9uI823SUnYBuGcxYlpSimD6H
+          #TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          #TELEGRAM_CHANNEL: ${{ secrets.TELEGRAM_CHANNEL }}
+          #TWILIO_SID: ${{ secrets.TWILIO_SID }}
+          #TWILIO_SECRET: ${{ secrets.TWILIO_SECRET }}
+          #TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
+          #TWILIO_TO: ${{ secrets.TWILIO_TO }}
+          #TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+          #GOTIFY_URL: ${{ secrets.GOTIFY_URL }}
+          #GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }}
+          #SNS_TOKEN: ${{ secrets.SNS_TOKEN }}
+          #SNS_SECRET: ${{ secrets.SNS_SECRET }}
+          #SNS_REGION: ${{ secrets.SNS_REGION }}
+          #SNS_TOPIC: ${{ secrets.SNS_TOPIC }}
 
 #      - name: Coveralls Testing Coverage
 #        run: |
@@ -343,8 +343,8 @@ jobs:
         env:
           VERSION: ${{ env.VERSION }}
           COMMIT: ${{ github.sha }}
-          MJML_APP: ${{ secrets.MJML_APP }}
-          MJML_PRIVATE: ${{ secrets.MJML_PRIVATE }}
+          #MJML_APP: ${{ secrets.MJML_APP }}
+          #MJML_PRIVATE: ${{ secrets.MJML_PRIVATE }}
         run: |
           make build
           chmod +x statping
