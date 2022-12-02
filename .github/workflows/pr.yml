@@ -4,13 +4,13 @@ on:
     branches:
       - '*'         # matches every branch
       - '*/*'       # matches every branch containing a single '/'
-      - '!master'   # excludes master
+      - '!main'     # excludes main
       - '!dev'      # excludes dev
   pull_request:
     branches:
       - '*'         # matches every branch
       - '*/*'       # matches every branch containing a single '/'
-      - '!master'   # excludes master
+      - '!main'     # excludes main
       - '!dev'      # excludes dev
 
 
