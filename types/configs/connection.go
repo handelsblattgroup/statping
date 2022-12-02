@@ -2,6 +2,8 @@ package configs
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/handelsblattgroup/statping/database"
 	"github.com/handelsblattgroup/statping/types/checkins"
 	"github.com/handelsblattgroup/statping/types/core"
@@ -16,9 +18,9 @@ import (
 	"github.com/handelsblattgroup/statping/types/users"
 	"github.com/handelsblattgroup/statping/utils"
 	"github.com/pkg/errors"
-	"gorm.io/gorm"
-	"time"
 )
+
+var Current database.Database
 
 // initModels sets the database for each Statping type packages
 func initModels(db database.Database) {
@@ -63,7 +65,7 @@ func Connect(configs *DbConfig, retry bool) error {
 
 	if db.Ping() == nil {
 		if utils.VerboseMode >= 4 {
-			dbSession.LogMode(true).Debug().SetLogger(gorm.Logger{log})
+			dbSession.LogMode(true).Debug()
 		}
 		log.Infoln(fmt.Sprintf("Database %s connection was successful.", configs.DbConn))
 	}

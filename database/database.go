@@ -8,6 +8,7 @@ import (
 
 	"github.com/handelsblattgroup/statping/types/metrics"
 	"github.com/handelsblattgroup/statping/utils"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -17,17 +18,12 @@ import (
 )
 
 var database Database
-var _ gorm.DB = database
 
 // Database is an interface which DB implements
 type Database interface {
 	Close() error
 	DB() *sql.DB
 	New() Database
-	NewScope(value interface{}) *gorm.Scope
-	CommonDB() gorm.
-	Callback() *gorm.Callback
-	SetLogger(l gorm.Logger)
 	LogMode(enable bool) Database
 	SingularTable(enable bool)
 	Where(query interface{}, args ...interface{}) Database
@@ -252,37 +248,27 @@ func OpenTester() (Database, error) {
 func Wrap(db *gorm.DB) Database {
 	return &Db{
 		Database: db,
-		Type:     db.Dialect().GetName(),
+		Type:     db.Dialector.Name(),
 		ReadOnly: utils.Params.GetBool("READ_ONLY"),
 	}
 }
 
 func (it *Db) Close() error {
-	return it.Database.Close()
+	// TODO: return it.Database.Close()
+	return nil
 }
 
 func (it *Db) DB() *sql.DB {
-	return it.Database.DB()
+	db, err := it.Database.DB()
+	if err != nil {
+		panic(errors.Wrapf(err, "database could not be returned"))
+	}
+
+	return db
 }
 
 func (it *Db) New() Database {
 	return Wrap(it.Database.New())
-}
-
-func (it *Db) NewScope(value interface{}) *gorm.Scope {
-	return it.Database.NewScope(value)
-}
-
-func (it *Db) CommonDB() gorm.SQLCommon {
-	return it.Database.CommonDB()
-}
-
-func (it *Db) Callback() *gorm.Callback {
-	return it.Database.Callback()
-}
-
-func (it *Db) SetLogger(log gorm.Logger) {
-	it.Database.SetLogger(log)
 }
 
 func (it *Db) LogMode(enable bool) Database {
@@ -290,7 +276,7 @@ func (it *Db) LogMode(enable bool) Database {
 }
 
 func (it *Db) SingularTable(enable bool) {
-	it.Database.SingularTable(enable)
+	// TODO: it.Database.SingularTable(enable)
 }
 
 func (it *Db) Where(query interface{}, args ...interface{}) Database {
@@ -314,7 +300,8 @@ func (it *Db) Offset(value int) Database {
 }
 
 func (it *Db) Order(value string, reorder ...bool) Database {
-	return Wrap(it.Database.Order(value, reorder...))
+	// TODO: return Wrap(it.Database.Order(value, reorder...))
+	return it
 }
 
 func (it *Db) Select(query interface{}, args ...interface{}) Database {

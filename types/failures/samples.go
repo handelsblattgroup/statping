@@ -2,10 +2,10 @@ package failures
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/handelsblattgroup/statping/types"
 	"github.com/handelsblattgroup/statping/utils"
-	gormbulk "github.com/t-tiger/gorm-bulk-insert/v2"
-	"time"
 )
 
 var (
@@ -64,9 +64,11 @@ func Samples() error {
 			records = append(records, failure)
 			createdAt = createdAt.Add(35 * time.Minute)
 		}
-		if err := gormbulk.BulkInsert(db.GormDB(), records, db.ChunkSize()); err != nil {
-			log.Error(err)
-			return err
+
+		tx := db.GormDB().CreateInBatches(records, db.ChunkSize())
+		if tx.Error != nil {
+			log.Error(tx.Error)
+			return tx.Error
 		}
 	}
 	return nil

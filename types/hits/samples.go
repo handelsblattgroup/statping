@@ -2,13 +2,13 @@ package hits
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/handelsblattgroup/statping/types"
 	"github.com/handelsblattgroup/statping/utils"
 	_ "github.com/mattn/go-sqlite3"
-	gormbulk "github.com/t-tiger/gorm-bulk-insert/v2"
 	_ "gorm.io/driver/mysql"
 	_ "gorm.io/driver/postgres"
-	"time"
 )
 
 var SampleHits = 99900.
@@ -17,9 +17,10 @@ func Samples() error {
 	log.Infoln("Inserting Sample Service Hits...")
 	for i := int64(1); i <= 5; i++ {
 		records := createHitsAt(i)
-		if err := gormbulk.BulkInsert(db.GormDB(), records, db.ChunkSize()); err != nil {
-			log.Error(err)
-			return err
+		tx := db.GormDB().CreateInBatches(records, db.ChunkSize())
+		if tx.Error != nil {
+			log.Error(tx.Error)
+			return tx.Error
 		}
 	}
 	return nil
