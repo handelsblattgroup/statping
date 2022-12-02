@@ -2,7 +2,7 @@ name: 3. Stable Build, Test and Deploy
 on:
   push:
     branches:
-      - stable
+      - main
     paths-ignore:
       - '**.md'
 
