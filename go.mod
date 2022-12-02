@@ -4,7 +4,7 @@ module github.com/handelsblattgroup/statping
 go 1.17
 
 require (
-	github.com/GeertJohan/go.rice v1.0.2
+	github.com/GeertJohan/go.rice v1.0.3
 	github.com/aws/aws-sdk-go v1.30.20
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/structs v1.1.0
@@ -54,7 +54,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cloudflare/cloudflare-go v0.11.6 // indirect
 	github.com/cpu/goacmedns v0.0.2 // indirect
-	github.com/daaku/go.zipexe v1.0.0 // indirect
+	github.com/daaku/go.zipexe v1.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dimchansky/utfbom v1.1.0 // indirect
 	github.com/dnsimple/dnsimple-go v0.60.0 // indirect
@@ -119,11 +119,13 @@ require (
 	github.com/vultr/govultr v0.3.3 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/ratelimit v0.1.0 // indirect
+	golang.org/x/mod v0.7.0 // indirect
 	golang.org/x/net v0.2.0 // indirect
-	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1 // indirect
+	golang.org/x/tools v0.3.0 // indirect
 	google.golang.org/api v0.100.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20221118155620-16455021b5e6 // indirect
