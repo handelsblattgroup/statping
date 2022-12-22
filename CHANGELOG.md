@@ -1,3 +1,6 @@
+# 0.92.0 (12-22-2022)
+- Added a maintenance server to handle /metrics and /health without authentication
+
 # 0.91.0 (11-30-2022)
 - Added response header checks
 - Added response header check negation

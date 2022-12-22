@@ -4,6 +4,12 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
 	"github.com/handelsblattgroup/statping/handlers"
 	"github.com/handelsblattgroup/statping/source"
 	"github.com/handelsblattgroup/statping/types/configs"
@@ -11,11 +17,6 @@ import (
 	"github.com/handelsblattgroup/statping/types/services"
 	"github.com/handelsblattgroup/statping/utils"
 	"github.com/pkg/errors"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-	"strings"
-	"time"
 )
 
 var (
@@ -395,7 +396,7 @@ func runOnce() error {
 }
 
 func checkGithubUpdates() (githubResponse, error) {
-	url := "https://api.github.com/repos/statping-ng/statping-ng/releases/latest"
+	url := "https://api.github.com/repos/handelsblattgroup/statping/releases/latest"
 	contents, _, err := utils.HttpRequest(url, "GET", nil, nil, nil, time.Duration(2*time.Second), true, nil)
 	if err != nil {
 		return githubResponse{}, err

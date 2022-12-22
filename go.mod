@@ -16,13 +16,13 @@ require (
 	github.com/gorilla/mux v1.7.4
 	github.com/hako/durafmt v0.0.0-20200605151348-3a43fc422dd9
 	github.com/jinzhu/gorm v1.9.16
-	github.com/mattn/go-sqlite3 v1.14.16
-	github.com/statping-ng/emails v1.0.3
+	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.14.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.6.3
+	github.com/statping-ng/emails v1.0.3
 	github.com/stretchr/testify v1.8.0
 	github.com/t-tiger/gorm-bulk-insert/v2 v2.1.0
 	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a
@@ -119,13 +119,11 @@ require (
 	github.com/vultr/govultr v0.3.3 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/ratelimit v0.1.0 // indirect
-	golang.org/x/mod v0.7.0 // indirect
 	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1 // indirect
-	golang.org/x/tools v0.3.0 // indirect
 	google.golang.org/api v0.100.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20221118155620-16455021b5e6 // indirect

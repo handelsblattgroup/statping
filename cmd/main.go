@@ -2,6 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/handelsblattgroup/statping/database"
 	"github.com/handelsblattgroup/statping/handlers"
 	"github.com/handelsblattgroup/statping/notifiers"
@@ -11,10 +15,6 @@ import (
 	"github.com/handelsblattgroup/statping/types/metrics"
 	"github.com/handelsblattgroup/statping/types/services"
 	"github.com/handelsblattgroup/statping/utils"
-	"github.com/pkg/errors"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 var (
@@ -59,7 +59,7 @@ func exit(err error) {
 func Close() {
 	utils.CloseLogs()
 	confgs.Close()
-	fmt.Println("Shutting down Statping")
+	handlers.StopHTTPServer(nil)
 }
 
 // main will run the Statping application
@@ -87,13 +87,14 @@ func start() {
 
 	utils.Params.Set("SERVER_IP", ipAddress)
 	utils.Params.Set("SERVER_PORT", port)
+	utils.Params.Set("MAINTENANCE_SERVER_IP", maintenanceIpAddress)
+	utils.Params.Set("MAINTENANCE_SERVER_PORT", maintenancePort)
+	utils.Params.Set("MAINTENANCE_SERVER_ENABLED", maintenanceServerEnabled)
 
 	confgs, err = configs.LoadConfigs(configFile)
 	if err != nil {
 		log.Infoln("Starting in Setup Mode")
-		if err = handlers.RunHTTPServer(); err != nil {
-			exit(err)
-		}
+		handlers.RunHTTPServer()
 	}
 
 	if err = configs.ConnectConfigs(confgs, true); err != nil {
@@ -112,9 +113,8 @@ func start() {
 		exit(err)
 	}
 
-	if err := mainProcess(); err != nil {
-		exit(err)
-	}
+	log.Infoln("Starting in Normal Mode")
+	mainProcess()
 }
 
 // sigterm will attempt to close the database connections gracefully
@@ -126,18 +126,14 @@ func sigterm() {
 }
 
 // mainProcess will initialize the Statping application and run the HTTP server
-func mainProcess() error {
+func mainProcess() {
 	if err := InitApp(); err != nil {
-		return err
+		exit(err)
 	}
 
 	services.LoadServicesYaml()
-
-	if err := handlers.RunHTTPServer(); err != nil {
-		log.Fatalln(err)
-		return errors.Wrap(err, "http server")
-	}
-	return nil
+	handlers.RunHTTPServer()
+	return
 }
 
 // InitApp will start the Statping instance with a valid database connection
