@@ -35,5 +35,5 @@ func parseFlags(cmd *cobra.Command) {
 	utils.Params.BindPFlag("maintenance-port", cmd.PersistentFlags().Lookup("maintenance-port"))
 
 	cmd.PersistentFlags().BoolVar(&maintenanceServerEnabled, "maintenance-enabled", false, "enable maintenance server")
-	utils.Params.BindPFlag("maintenance-port", cmd.PersistentFlags().Lookup("maintenance-port"))
+	utils.Params.BindPFlag("maintenance-enabled", cmd.PersistentFlags().Lookup("maintenance-enabled"))
 }

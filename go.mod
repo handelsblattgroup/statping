@@ -13,6 +13,7 @@ require (
 	github.com/getsentry/sentry-go v0.5.1
 	github.com/go-mail/mail v2.3.1+incompatible
 	github.com/go-ping/ping v1.1.0
+	github.com/gomarkdown/markdown v0.0.0-20200820230800-3724143f5294
 	github.com/gorilla/mux v1.7.4
 	github.com/hako/durafmt v0.0.0-20200605151348-3a43fc422dd9
 	github.com/jinzhu/gorm v1.9.16
@@ -25,6 +26,7 @@ require (
 	github.com/statping-ng/emails v1.0.3
 	github.com/stretchr/testify v1.8.0
 	github.com/t-tiger/gorm-bulk-insert/v2 v2.1.0
+	github.com/tdewolff/minify/v2 v2.8.0
 	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783
 	google.golang.org/grpc v1.50.1
@@ -114,6 +116,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
+	github.com/tdewolff/parse/v2 v2.4.4 // indirect
 	github.com/timewasted/linode v0.0.0-20160829202747-37e84520dcf7 // indirect
 	github.com/transip/gotransip/v6 v6.0.2 // indirect
 	github.com/vultr/govultr v0.3.3 // indirect

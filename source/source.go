@@ -7,8 +7,10 @@ package source
 import (
 	"fmt"
 	"github.com/GeertJohan/go.rice"
+	_ "github.com/gomarkdown/markdown"
 	"github.com/handelsblattgroup/statping/utils"
 	"github.com/pkg/errors"
+	_ "github.com/tdewolff/minify/v2"
 	"os"
 	"os/exec"
 	"path/filepath"

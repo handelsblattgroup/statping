@@ -273,13 +273,16 @@ download-key:
 	gpg --import statping.gpg
 
 dockerhub:
-	docker build --build-arg VERSION=${VERSION} -t adamboutcher/statping-ng:latest --no-cache -f Dockerfile .
-	docker tag adamboutcher/statping-ng adamboutcher/statping-ng:v${VERSION}
-	docker push adamboutcher/statping-ng:v${VERSION}
-	docker push adamboutcher/statping-ng
+	docker build --build-arg VERSION=${VERSION} --build-arg COMMIT=${COMMIT} -t handelsblattgroup/statping:latest --no-cache -f Dockerfile .
+	docker tag handelsblattgroup/statping handelsblattgroup/statping:v${VERSION}
+	docker tag handelsblattgroup/statping handelsblattgroup/statping:${COMMIT}
+	docker push handelsblattgroup/statping:v${VERSION}
+	docker push handelsblattgroup/statping:${COMMIT}
+	docker push handelsblattgroup/statping:latest
+	docker push handelsblattgroup/statping
 
 docker-build-dev:
-	docker build --build-arg VERSION=${VERSION} -t statping-ng/statping-ng:latest --no-cache -f Dockerfile .
+	docker build --build-arg VERSION=${VERSION} --build-arg COMMIT=${COMMIT} -t statping-ng/statping-ng:latest --no-cache -f Dockerfile .
 	docker tag statping-ng/statping-ng:latest statping-ng/statping-ng:dev-v${VERSION}
 
 post-release: frontend-build upload_to_s3 publish-homebrew dockerhub
@@ -363,13 +366,13 @@ xgo-latest:
 buildx-latest: multiarch
 	docker buildx create --name statping-latest --driver-opt image=moby/buildkit:master
 	docker buildx inspect --builder statping-latest --bootstrap
-	docker buildx build --builder statping-latest --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache,mode=max" --push --pull --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -f Dockerfile -t adamboutcher/statping-ng:latest -t adamboutcher/statping-ng:v${VERSION} --build-arg=VERSION=${VERSION} --build-arg=COMMIT=${COMMIT} .
+	docker buildx build --builder statping-latest --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache,mode=max" --push --pull --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -f Dockerfile -t handelsblattgroup/statping:latest -t handelsblattgroup/statping:v${VERSION} --build-arg=VERSION=${VERSION} --build-arg=COMMIT=${COMMIT} .
 	docker buildx rm statping-latest
 
 buildx-dev: multiarch
 	docker buildx create --name statping-dev --driver-opt image=moby/buildkit:master
 	docker buildx inspect --builder statping-dev --bootstrap
-	docker buildx build --builder statping-dev --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache,mode=max" --push --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -f Dockerfile -t adamboutcher/statping-ng:dev --build-arg=VERSION=${VERSION} --build-arg=COMMIT=${COMMIT} .
+	docker buildx build --builder statping-dev --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache,mode=max" --push --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -f Dockerfile -t handelsblattgroup/statping:dev --build-arg=VERSION=${VERSION} --build-arg=COMMIT=${COMMIT} .
 	docker buildx rm statping-dev
 
 multiarch:
