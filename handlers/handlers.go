@@ -32,6 +32,7 @@ var (
 
 func StopHTTPServer(err error) {
 	log.Infoln("Stopping HTTP Server")
+	// TODO: add graceful shutdown
 	// err = maintenanceServer.Shutdown(context.Background())
 	// if err != nil {
 	// 	maintenanceLog.Fatal(errors.Wrapf(err, "shuting down maintenance server failed"))

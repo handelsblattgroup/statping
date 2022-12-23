@@ -59,7 +59,8 @@ func exit(err error) {
 func Close() {
 	utils.CloseLogs()
 	confgs.Close()
-	handlers.StopHTTPServer(nil)
+	fmt.Println("Shutting down Statping")
+	//TODO: handlers.StopHTTPServer(nil)
 }
 
 // main will run the Statping application
