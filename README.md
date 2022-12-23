@@ -123,6 +123,11 @@ Having a straight forward dashboard makes Statping-ng that much better. Quickly 
 </p>
 
 ```bash
+docker run -it -p 8080:8080 handelsblattgroup/statping:latest
+```
+
+```bash
+# with maintenance server enabled
 docker run -it -p 8080:8080 -p 8081:8081 handelsblattgroup/statping:latest statping --maintenance-enabled
 ```
 
