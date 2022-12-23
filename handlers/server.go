@@ -3,14 +3,35 @@ package handlers
 import (
 	"crypto/tls"
 	"fmt"
+	"net/http"
+	"strings"
+
 	"github.com/foomo/simplecert"
 	"github.com/foomo/tlsconfig"
 	"github.com/handelsblattgroup/statping/utils"
-	"net/http"
-	"strings"
+	"github.com/pkg/errors"
 )
 
-func startServer(host string) error {
+func startMaintenanceServer(host string) {
+	maintenanceServer = &http.Server{
+		Addr:         host,
+		WriteTimeout: timeout,
+		ReadTimeout:  timeout,
+		IdleTimeout:  timeout,
+		Handler:      maintenanceRouter,
+	}
+
+	go func() {
+		err := maintenanceServer.ListenAndServe()
+		if err != nil {
+			maintenanceLog.Fatal(errors.Wrapf(err, "starting maintenance server failed"))
+		}
+
+		waitGroup.Done()
+	}()
+}
+
+func startServer(host string) {
 	httpServer = &http.Server{
 		Addr:         host,
 		WriteTimeout: timeout,
@@ -19,7 +40,15 @@ func startServer(host string) error {
 		Handler:      router,
 	}
 	httpServer.SetKeepAlivesEnabled(false)
-	return httpServer.ListenAndServe()
+
+	go func() {
+		err := httpServer.ListenAndServe()
+		if err != nil {
+			log.Fatal(errors.Wrapf(err, "starting server failed"))
+		}
+
+		waitGroup.Done()
+	}()
 }
 
 func letsEncryptCert() (*tls.Config, error) {
@@ -40,9 +69,7 @@ func letsEncryptCert() (*tls.Config, error) {
 	cfg.DidRenewCertificate = func() {
 		log.Infoln("LetsEncrypt renewed SSL Certificate for: ", utils.Params.GetString("LETSENCRYPT_HOST"))
 		StopHTTPServer(nil)
-		if err := RunHTTPServer(); err != nil {
-			log.Errorln(err)
-		}
+		RunHTTPServer()
 	}
 	cfg.FailedToRenewCertificate = func(err error) {
 		log.Errorln(err)
@@ -61,13 +88,13 @@ func letsEncryptCert() (*tls.Config, error) {
 	return tlsconf, nil
 }
 
-func startLetsEncryptServer(ip string) error {
+func startLetsEncryptServer(ip string) {
 	log.Infoln("Starting LetEncrypt redirect server on port 80")
 	go http.ListenAndServe(":80", http.HandlerFunc(simplecert.Redirect))
 
 	cfg, err := letsEncryptCert()
 	if err != nil {
-		return err
+		log.Fatal(errors.Wrapf(err, "loading LetsEncrypt certificate failed"))
 	}
 
 	srv := &http.Server{
@@ -79,10 +106,17 @@ func startLetsEncryptServer(ip string) error {
 		IdleTimeout:  timeout,
 	}
 
-	return srv.ListenAndServeTLS("", "")
+	go func() {
+		err := srv.ListenAndServeTLS("", "")
+		if err != nil {
+			log.Fatal(errors.Wrapf(err, "starting server failed"))
+		}
+
+		waitGroup.Done()
+	}()
 }
 
-func startSSLServer(ip string) error {
+func startSSLServer(ip string) {
 	cfg := &tls.Config{
 		MinVersion:               tls.VersionTLS12,
 		CurvePreferences:         []tls.CurveID{tls.CurveP521, tls.CurveP384, tls.CurveP256},
@@ -107,5 +141,12 @@ func startSSLServer(ip string) error {
 	certFile := utils.Directory + "/server.crt"
 	keyFile := utils.Directory + "/server.key"
 
-	return srv.ListenAndServeTLS(certFile, keyFile)
+	go func() {
+		err := srv.ListenAndServeTLS(certFile, keyFile)
+		if err != nil {
+			log.Fatal(errors.Wrapf(err, "starting server failed"))
+		}
+
+		waitGroup.Done()
+	}()
 }

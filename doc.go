@@ -1,5 +1,5 @@
 // Package statping is a server monitoring application that includes a status page server. Visit the Statping repo at
-// https://github.com/adamboutcher/statping-ng to get a full understanding of what this application can do.
+// https://github.com/handelsblattgroup/statping to get a full understanding of what this application can do.
 //
 // Install Statping
 //

@@ -1,5 +1,5 @@
 FROM node:16.14.0-alpine AS frontend
-LABEL maintainer="Statping-ng (https://github.com/statping-ng)"
+LABEL maintainer="HANDELSBLATT MEDIA GROUP (https://github.com/handelsblattgroup)"
 ARG BUILDPLATFORM
 WORKDIR /statping
 COPY ./frontend/package.json .
@@ -11,7 +11,7 @@ RUN yarn build && yarn cache clean
 # Statping Golang BACKEND building from source
 # Creates "/go/bin/statping" and "/usr/local/bin/sass" for copying
 FROM golang:1.17-alpine AS backend
-LABEL maintainer="Statping-NG (https://github.com/statping-ng)"
+LABEL maintainer="HANDELSBLATT MEDIA GROUP (https://github.com/handelsblattgroup)"
 ARG VERSION
 ARG COMMIT
 ARG BUILDPLATFORM

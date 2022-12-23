@@ -36,7 +36,7 @@ parts:
     source: .
     plugin: nil
     override-build: |
-      curl -o- -L https://raw.githubusercontent.com/adamboutcher/statping-ng/dev/install.sh | bash
+      curl -o- -L https://raw.githubusercontent.com/handelsblattgroup/statping/dev/install.sh | bash
     build-packages:
       - tar
       - curl

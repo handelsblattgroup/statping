@@ -28,8 +28,8 @@ Statping-ng aims to be an updated drop-in replacement of statping after developm
   <img alt="Unstable Build Status" src="https://img.shields.io/github/workflow/status/statping-ng/statping-ng/2.%20Unstable%20Build,%20Test%20and%20Deploy?label=Unstable&style=for-the-badge&logo=github" />
   <img alt="Stable Build Status" src="https://img.shields.io/github/workflow/status/statping-ng/statping-ng/3.%20Stable%20Build,%20Test%20and%20Deploy?label=Stable&style=for-the-badge&logo=github" />
 </p><p align="center" style="text-align:center">
-  <a href="https://hub.docker.com/r/adamboutcher/statping-ng"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/adamboutcher/statping-ng?style=for-the-badge&logo=docker&logoColor=white" /></a>
-  <a href="https://hub.docker.com/r/adamboutcher/statping-ng"><img alt="Docker Image Size" src="https://img.shields.io/docker/image-size/adamboutcher/statping-ng/latest?style=for-the-badge&logo=docker&logoColor=white" /></a>
+  <a href="https://hub.docker.com/r/handelsblattgroup/statping"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/handelsblattgroup/statping?style=for-the-badge&logo=docker&logoColor=white" /></a>
+  <a href="https://hub.docker.com/r/handelsblattgroup/statping"><img alt="Docker Image Size" src="https://img.shields.io/docker/image-size/handelsblattgroup/statping/latest?style=for-the-badge&logo=docker&logoColor=white" /></a>
 </p><p align="center" style="text-align:center">
   <img alt="Go Version" src="https://img.shields.io/github/go-mod/go-version/statping-ng/statping-ng?style=for-the-badge" />
   <a href="https://goreportcard.com/badge/github.com/handelsblattgroup/statping"><img alt="Go Report" src="https://goreportcard.com/badge/github.com/handelsblattgroup/statping?style=for-the-badge" /></a>
@@ -119,11 +119,16 @@ Having a straight forward dashboard makes Statping-ng that much better. Quickly 
 <p>Here's a few quick start guides to get you going, fast.</p>
 
 <h3>Docker</h3>
-<p>Use the <a href="https://hub.docker.com/r/adamboutcher/statping-ng">Statping Docker Image</a> to create a status page in seconds. Checkout the <a href="https://github.com/handelsblattgroup/statping/wiki/Docker">Docker Wiki</a> to view more details on how to get started using Docker.
+<p>Use the <a href="https://hub.docker.com/r/handelsblattgroup/statping">Statping Docker Image</a> to create a status page in seconds. Checkout the <a href="https://github.com/handelsblattgroup/statping/wiki/Docker">Docker Wiki</a> to view more details on how to get started using Docker.
 </p>
 
 ```bash
-docker run -it -p 8080:8080 adamboutcher/statping-ng
+docker run -it -p 8080:8080 handelsblattgroup/statping:latest
+```
+
+```bash
+# with maintenance server enabled
+docker run -it -p 8080:8080 -p 8081:8081 handelsblattgroup/statping:latest statping --maintenance-enabled
 ```
 
 <h3>Docker Compose</h3>

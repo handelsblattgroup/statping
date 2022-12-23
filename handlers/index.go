@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/handelsblattgroup/statping/types/core"
 	"github.com/handelsblattgroup/statping/types/services"
-	"net/http"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {

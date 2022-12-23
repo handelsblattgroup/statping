@@ -6,10 +6,11 @@ import (
 	"html/template"
 	"net/http"
 	"path"
+	"sync"
 	"time"
 
 	"github.com/handelsblattgroup/statping/source"
-	"github.com/handelsblattgroup/statping/types/errors"
+	statpingErrors "github.com/handelsblattgroup/statping/types/errors"
 	"github.com/handelsblattgroup/statping/utils"
 )
 
@@ -20,25 +21,57 @@ const (
 )
 
 var (
-	jwtKey     []byte
-	httpServer *http.Server
-	usingSSL   bool
-	mainTmpl   = `{{define "main" }} {{ template "base" . }} {{ end }}`
-	templates  = []string{"base.gohtml"}
+	jwtKey            []byte
+	httpServer        *http.Server
+	maintenanceServer *http.Server
+	usingSSL          bool
+	mainTmpl          = `{{define "main" }} {{ template "base" . }} {{ end }}`
+	templates         = []string{"base.gohtml"}
+	waitGroup         *sync.WaitGroup
 )
 
 func StopHTTPServer(err error) {
 	log.Infoln("Stopping HTTP Server")
+	// TODO: add graceful shutdown
+	// err = maintenanceServer.Shutdown(context.Background())
+	// if err != nil {
+	// 	maintenanceLog.Fatal(errors.Wrapf(err, "shuting down maintenance server failed"))
+	// }
+
+	// err = httpServer.Shutdown(context.Background())
+	// if err != nil {
+	// 	maintenanceLog.Fatal(errors.Wrapf(err, "shuting down maintenance server failed"))
+	// }
 }
 
 // RunHTTPServer will start a HTTP server on a specific IP and port
-func RunHTTPServer() error {
-	if utils.Params.GetBool("DISABLE_HTTP") {
-		return nil
+func RunHTTPServer() {
+	waitGroup = new(sync.WaitGroup)
+
+	maintenanceServerEnabled := utils.Params.GetBool("MAINTENANCE_SERVER_ENABLED")
+
+	if maintenanceServerEnabled {
+		waitGroup.Add(1)
+
+		maintenanceIpAddress := utils.Params.GetString("MAINTENANCE_SERVER_IP")
+		maintenancePort := utils.Params.GetString("MAINTENANCE_SERVER_PORT")
+		maintenanceHost := fmt.Sprintf("%v:%v", maintenanceIpAddress, maintenancePort)
+		maintenanceRouter = MaintenanceRouter()
+
+		startMaintenanceServer(maintenanceHost)
+
+		maintenanceLog.Infoln("Statping HTTP Maintenance Server running on http://" + maintenanceHost + basePath)
 	}
 
+	if utils.Params.GetBool("DISABLE_HTTP") {
+		return
+	}
+
+	waitGroup.Add(1)
+
 	ip := utils.Params.GetString("SERVER_IP")
-	host := fmt.Sprintf("%v:%v", ip, utils.Params.GetInt("SERVER_PORT"))
+	port := utils.Params.GetString("SERVER_PORT")
+	host := fmt.Sprintf("%v:%v", ip, port)
 	key := utils.FileExists(utils.Directory + "/server.key")
 	cert := utils.FileExists(utils.Directory + "/server.crt")
 
@@ -54,12 +87,14 @@ func RunHTTPServer() error {
 	resetCookies()
 
 	if utils.Params.GetBool("LETSENCRYPT_ENABLE") {
-		return startLetsEncryptServer(ip)
+		startLetsEncryptServer(ip)
 	} else if usingSSL {
-		return startSSLServer(ip)
+		startSSLServer(ip)
 	} else {
-		return startServer(host)
+		startServer(host)
 	}
+
+	waitGroup.Wait()
 }
 
 // IsReadAuthenticated will allow Read Only authentication for some routes
@@ -74,10 +109,8 @@ func IsReadAuthenticated(r *http.Request) bool {
 		return true
 	}
 	_, err := getJwtToken(r)
-	if err == nil {
-		return true
-	}
-	return false
+
+	return err == nil
 }
 
 // IsFullAuthenticated returns true if the HTTP request is authenticated. You can set the environment variable GO_ENV=test
@@ -203,14 +236,14 @@ func ExecuteResponse(w http.ResponseWriter, r *http.Request, file string, data i
 
 func returnJson(d interface{}, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	if e, ok := d.(errors.Error); ok {
+	if e, ok := d.(statpingErrors.Error); ok {
 		w.WriteHeader(e.Status())
 		json.NewEncoder(w).Encode(e)
 		return
 	}
 	if e, ok := d.(error); ok {
 		w.WriteHeader(500)
-		json.NewEncoder(w).Encode(errors.New(e.Error()))
+		json.NewEncoder(w).Encode(statpingErrors.New(e.Error()))
 		return
 	}
 	w.WriteHeader(http.StatusOK)
